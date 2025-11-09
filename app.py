@@ -94,4 +94,5 @@ def admin_list():
 
 if __name__ == "__main__":
     ensure_db()
+    print(f"Starting Flask app on {HOST}:{PORT}, DB at {DB_PATH}, CSV at {CSV_PATH}")
     app.run(host=HOST, port=PORT, debug=True)
