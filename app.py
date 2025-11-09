@@ -2,7 +2,7 @@ import os
 import sqlite3
 from datetime import datetime
 from pathlib import Path
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 from werkzeug.utils import secure_filename
 from datetime import datetime
 
@@ -87,6 +87,23 @@ def set_active_mode(mode):
 # --------------------------
 # 4️⃣ Routes
 # --------------------------
+
+@app.route("/generate_204")
+@app.route("/hotspot-detect.html")
+@app.route("/ncsi.txt")
+@app.route("/connecttest.txt")
+@app.route("/success.txt")
+@app.route("/connectivity-check.html")
+@app.route("/check_network_status.txt")
+@app.route("/index.html")
+@app.route("/generate204")
+@app.route("/connectivity-check.ubuntu.com")
+def captive_probe():
+    return redirect("http://192.168.4.1", code=302)
+
+@app.route("/", methods=["GET"])
+def captive_redirect():
+    return render_template("captive.html")
 
 # Survey Page
 @app.route("/survey", methods=["GET"])
@@ -175,8 +192,8 @@ if __name__ == "__main__":
     key_file = Path("key.pem")
     if cert_file.exists() and key_file.exists():
         print(f"Starting HTTPS Flask server on 0.0.0.0:5000")
-        app.run(host="0.0.0.0", port=5000, debug=True, ssl_context=('cert.pem','key.pem'))
+        app.run(host="0.0.0.0", port=443, debug=True, ssl_context=('cert.pem','key.pem'))
     else:
         print("Starting HTTP Flask server (cert.pem/key.pem not found)")
-        app.run(host="0.0.0.0", port=5000, debug=True)
+        app.run(host="0.0.0.0", port=80, debug=True)
 

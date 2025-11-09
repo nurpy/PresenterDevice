@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome to PiPortal</title>
+    <style>
+      body { font-family: sans-serif; text-align: center; margin-top: 25vh; }
+      a.button {
+        display: inline-block; padding: 0.8em 1.6em;
+        background: #007bff; color: #fff; border-radius: 8px;
+        text-decoration: none; font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Connected to PiPortal</h2>
+    <p>Tap below to open the full site.</p>
+
+    <!-- this link launches the default system browser -->
+    <a class="button" href="http://192.168.4.1/home" target="_blank">
+      Continue to Full Browser
+    </a>
+
+    <!-- optional “finish” call so OS closes mini-browser cleanly -->
+    <script>
+      fetch("/success", {method: "GET"}).catch(()=>{});
+    </script>
+  </body>
+</html>

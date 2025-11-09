@@ -1,8 +1,8 @@
 #!/bin/bash
 # Launch Flask app with environment variables
 
-export FLASK_HOST=127.0.0.1
-export FLASK_PORT=5000
+export FLASK_HOST=192.168.4.1
+export FLASK_PORT=80
 export DB_PATH=./data.sqlite          # default
 export CSV_PATH=./submissions.csv     # default
 export ADMIN_TOKEN=supersecret123     # change this before deploying
