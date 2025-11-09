@@ -15,6 +15,9 @@ app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")  # for session/fla
 # --------------------------
 # 2️⃣ Configuration for file uploads
 # --------------------------
+ACTIVE_MODE_FILE = Path("active_mode.txt")
+DEFAULT_MODE = "survey"  # fallback if file missing
+
 RESUME_UPLOAD_FOLDER = Path("uploads")
 RESUME_UPLOAD_FOLDER.mkdir(exist_ok=True)
 ALLOWED_RESUME_EXTENSIONS = {"pdf", "doc", "docx", "txt"}
@@ -73,6 +76,14 @@ def insert_applicant(data, client_ip, user_agent):
         line = f'{rowid},"{data.get("full_name")}","{data.get("email")}","{data.get("phone")}","{data.get("position")}","{data.get("experience")}","{data.get("skills")}","{data.get("resume_path")}","{client_ip}","{user_agent}",{created_at}\n'
         f.write(line)
 
+def get_active_mode():
+    if ACTIVE_MODE_FILE.exists():
+        return ACTIVE_MODE_FILE.read_text().strip()
+    return DEFAULT_MODE
+
+def set_active_mode(mode):
+    ACTIVE_MODE_FILE.write_text(mode.strip())
+
 # --------------------------
 # 4️⃣ Routes
 # --------------------------
@@ -129,10 +140,31 @@ def submit_application():
 
     return render_template("job_thankyou.html")
 
-@app.route("/", methods=["GET"])
+@app.route("/main", methods=["GET"])
 def index():
     return render_template("index.html", datetime=datetime)
-    
+
+# Captive portal root: dynamically serves whichever mode is active
+@app.route("/home", methods=["GET"])
+def portal_home():
+    mode = get_active_mode()
+    if mode == "apply":
+        return render_template("job_application.html")
+    else:
+        return render_template("survey.html")
+
+# Admin page to toggle modes
+@app.route("/admin", methods=["GET", "POST"])
+def admin_panel():
+    current_mode = get_active_mode()
+    if request.method == "POST":
+        new_mode = request.form.get("mode")
+        if new_mode in ["apply", "survey"]:
+            set_active_mode(new_mode)
+        current_mode = get_active_mode()
+
+    return render_template("admin.html", mode=current_mode)
+
 # --------------------------
 # 5️⃣ Main
 # --------------------------

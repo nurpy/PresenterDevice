@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Server Control Panel</title>
+  <style>
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      background: #f9fafb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .panel {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      width: 340px;
+    }
+    h1 {
+      color: #111827;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+    .qr-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .qr-container img {
+      width: 150px;
+      height: 150px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #f3f4f6;
+    }
+    form { margin-top: 20px; }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-weight: 600;
+      margin: 5px;
+    }
+    button:hover { background: #1e40af; }
+    .current {
+      margin-top: 20px;
+      color: #333;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1>🛠 Portal Control</h1>
+
+    <!-- QR Code placeholder -->
+    <div class="qr-container">
+      <img src="{{ url_for('static', filename='qr_dummy.png') }}" alt="QR Code Placeholder" />
+    </div>
+
+    <form method="POST">
+      <button name="mode" value="survey">Serve Survey</button>
+      <button name="mode" value="apply">Serve Job Form</button>
+    </form>
+
+    <div class="current">
+      Current mode: <strong>{{ mode }}</strong>
+    </div>
+  </div>
+</body>
+</html>
