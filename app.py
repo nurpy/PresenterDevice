@@ -4,6 +4,7 @@ from datetime import datetime
 from pathlib import Path
 from flask import Flask, request, render_template
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 # --------------------------
 # 1️⃣ Create Flask app
@@ -128,6 +129,10 @@ def submit_application():
 
     return render_template("job_thankyou.html")
 
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html", datetime=datetime)
+    
 # --------------------------
 # 5️⃣ Main
 # --------------------------

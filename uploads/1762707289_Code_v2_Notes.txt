@@ -1,0 +1,141 @@
+- commerce will drive the change and regulationization of the internet
+	- ads taking up a lot of spaces?
+
+- using code as the digital alternative to laws and regulations seems vague. what is code?
+
+- In speaking of a constitution in cyberspace we are simply asking: What values should be protected there? What values should be built into the space to encourage what forms of life? (pg 6)
+
+- parallels between post totalitarian Eastern bloc seeking "anarchy" and post govt west seeking the internet 
+
+- fixing problems with code or making choices within the code constraints in cyberspace? Similar to changing laws or living within laws
+
+- surveillance is becoming easier and less burdensome on targets, should govt increase surveillance as a result?
+
+-issue is cyberspace eliminates physical geography, which makes question of which rules apply, more difficult
+  - commerce helps solve this issue from its need for geo-targetted ads
+
+- authentication is needed for real space and cyber space to better the regulations in those spaces
+
+Creating an identity layer on internet----
+- individuals gain control to data, commerce and govt can more easily sell/distro info
+	- but indivs lose anonymous speech, and govt/commerce lose access to data collection on indivs 
+
+
+
+CH 5-6 
+- govt should regulate a small volume of distributers to indirectly regulate mass audiences
+
+- making something regulable seems to be a way to allow govt to access the info so future regulations may be imposed on behavior
+
+- ideal goal is to build a system that maintains traceablity, but only traces with proper judicial action, similar to concept of worm in storage
+
+- creating regulation in code is like a locked door blocking access by existence - architecture
+
+- games like second life have become a commerce-like influencer in cyberspace regulatory architecture
+
+
+CH 7-9
+- laws, social norms, the market, and code can all "regulate"
+	- in cyberspace, code is a strong mode of regulation, so power struggle over who controls code
+
+- open source software may seem unsafe, but control is still in hands of a few
+
+- markets also favor closed products, so open SW, while less regulable, can still less widespread
+
+- cyberspace is not the same as physical, so laws must be appropriately applied to prevent over or under reach of govt
+
+
+Ch 10
+
+- traditional IP laws meant to spur innovation by giving creators temp monopolies
+	- goal was to eventually return them to public for societal greater good
+
+- code is much more adherent to ownership, ex: not much flexibility using fair use to copy songs
+
+- companies are incentivized to crack down on their DRM violations to make profits, decreasing the free useability of much content online
+
+- shift towards a permission culture from free, can potentially stifle creativity due to fear of DRM prosecutions 
+
+
+
+
+CH 11
+
+- surveillance has become cheaper due to the ease of doing it in cyberspace
+
+- market and govt have incentives to surveil: for profits, and law enforcement respectively
+
+- question of whether anonymity is valued or ability to truly authenticate someone is valued more
+
+- US has more culture of letting markets regulate cyberspace, but EU passes more laws to regulate
+
+- since code is law, code must be scrutinized like any bill being passed
+
+
+
+CH 12-13
+
+- first amendment applies only to physical space, but framers could not have envisioned this, debate on where it now applies
+
+- private ISPs end up regulating speech like govt, even though not required by constitution
+
+- we must decide who decides speech freedom in cyberspace, got, private entities, or the people
+
+- speech takes different forms online vs in person. How to decide how this speech gets reinterpreted under the same laws governing both spaces 
+
+
+CH 14 - 15
+
+- can be confusing on who has sovereignty over cyberspace, since it is not bound by geography
+
+- physical connections (ISPs, data centers,ec) are where governments can regulate cyberspace
+
+- nations can have competing interests that cause different cyberspace regulation laws, which can resditribute cyberspace demand to different countries
+
+- competition can be risky and further fragment the internet, or unify it and promote privacy 
+
+
+CH 16-18
+
+- the loss of digital freedoms is happening behind the scenes, and many are unaware to the changes
+
+- increasing cyberspace regulation decreases choice and anonymity 
+
+- Lessig suggests a constitution of sorts for cyberspace, developed by coders and lawmakers and citizen involvement
+
+- Lessig rebuts Declan McCullagh by claiming that a lack of action in regulating code will cause private powers to take over control of cyberspace
+
+- instead public oversight is necessary, he argues, to ensure transparent and accountable regulation
+
+
+
+
+
+
+
+
+
+Goldman & Sibley, Sections I - III 
+
+- Orwell's "memory hole" from 1984 can serve as a good analogy of modern copyright misuse, which results in society's loss of knowledge and truth
+
+- copyright is easier to enforce with takedowns of content and US law also protects this behavior
+
+- copyright laws being used to protect privacy and reputation are against the original intent of copyright laws, which were meant to spread info not suppress
+
+- there are a few real world cases where copyright laws were weaponized against critics, used to hide info from public, and change records of events
+
+
+
+
+Goldman & Sibley, Sections IV - V 
+
+- privacy and copyright can intersect in four applications: protection of private physical spaces, autonomy over ones own body, privacy for personal opinions, control over personal data
+
+- but the need for privacy must not facilitate stronger copyright laws, as this risks using copyright for censorship
+
+- one way to curb copyright misuse is to set a time limit on its term, so that descendents can't make claims for ancestor's works
+
+- another way is for courts to interpret a copyright case in favor of fair use if it documents a factual or socially significant event, meaning such data cannot be taken down by copyright
+
+
