@@ -98,12 +98,9 @@ def set_active_mode(mode):
 @app.route("/index.html")
 @app.route("/generate204")
 @app.route("/connectivity-check.ubuntu.com")
+@app.route("/redirect")
 def captive_probe():
     return redirect("http://192.168.4.1", code=302)
-
-@app.route("/", methods=["GET"])
-def captive_redirect():
-    return render_template("captive.html")
 
 # Survey Page
 @app.route("/survey", methods=["GET"])
@@ -162,7 +159,7 @@ def index():
     return render_template("index.html", datetime=datetime)
 
 # Captive portal root: dynamically serves whichever mode is active
-@app.route("/home", methods=["GET"])
+@app.route("/", methods=["GET"])
 def portal_home():
     mode = get_active_mode()
     if mode == "apply":
