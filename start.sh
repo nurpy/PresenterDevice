@@ -6,7 +6,9 @@ export FLASK_PORT=80
 export DB_PATH=./data.sqlite          # default
 export CSV_PATH=./submissions.csv     # default
 export ADMIN_TOKEN=supersecret123     # change this before deploying
+source .venv/bin/activate
 python app.py
+firefox --kiosk "localhost/admin"
 
 
 echo "Flask app started with the following settings:"
