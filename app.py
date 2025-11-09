@@ -6,15 +6,11 @@ from flask import Flask, request, render_template, redirect
 from werkzeug.utils import secure_filename
 from datetime import datetime
 
-# --------------------------
-# 1️⃣ Create Flask app
-# --------------------------
+# Create Flask app
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")  # for session/flash
 
-# --------------------------
-# 2️⃣ Configuration for file uploads
-# --------------------------
+# Configuration for file uploads
 ACTIVE_MODE_FILE = Path("active_mode.txt")
 DEFAULT_MODE = "survey"  # fallback if file missing
 
@@ -25,9 +21,7 @@ ALLOWED_RESUME_EXTENSIONS = {"pdf", "doc", "docx", "txt"}
 def allowed_resume(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_RESUME_EXTENSIONS
 
-# --------------------------
-# 3️⃣ Database helper functions
-# --------------------------
+# Database helper functions
 def ensure_applicant_db():
     conn = sqlite3.connect("job_applications.sqlite")
     conn.execute('''
@@ -84,10 +78,7 @@ def get_active_mode():
 def set_active_mode(mode):
     ACTIVE_MODE_FILE.write_text(mode.strip())
 
-# --------------------------
-# 4️⃣ Routes
-# --------------------------
-
+# Routes
 @app.route("/generate_204")
 @app.route("/hotspot-detect.html")
 @app.route("/ncsi.txt")
@@ -179,16 +170,14 @@ def admin_panel():
 
     return render_template("admin.html", mode=current_mode)
 
-# --------------------------
-# 5️⃣ Main
-# --------------------------
+# Main
 if __name__ == "__main__":
     ensure_applicant_db()
     # Listen on all interfaces for Pi usage
     cert_file = Path("cert.pem")
     key_file = Path("key.pem")
     if cert_file.exists() and key_file.exists():
-        print(f"Starting HTTPS Flask server on 0.0.0.0:5000")
+        print(f"Starting HTTPS Flask server on 0.0.0.0:80")
         app.run(host="0.0.0.0", port=443, debug=True, ssl_context=('cert.pem','key.pem'))
     else:
         print("Starting HTTP Flask server (cert.pem/key.pem not found)")

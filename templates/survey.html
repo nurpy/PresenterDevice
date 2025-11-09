@@ -93,7 +93,7 @@
 </head>
 <body>
   <div class="card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/7/75/T-Mobile_logo_2022.svg" alt="T-Mobile Logo" class="logo" />
+    <img src="{{ url_for('static', filename='icon.jpeg') }}" alt="Icon" class="logo"/>
     <h1>T-Mobile</h1>
     <h2>Customer Experience Survey</h2>
     <form method="POST" action="/submit-survey">
@@ -179,9 +179,9 @@
 
       <button class="submit-btn" type="submit">Submit Survey</button>
     </form>
-    <div class="footer">
+    <!-- <div class="footer">
       © 2025 T-Mobile USA, Inc. | For demonstration purposes only
-    </div>
+    </div> -->
   </div>
 </body>
 </html>
