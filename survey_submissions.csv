@@ -1,0 +1,6 @@
+id,name,email,satisfaction,coverage,recommend,support,account,issues,value,comments,client_ip,user_agent,created_at
+1,"ee","",Satisfied,Good,None,Very satisfied,Very easy,Frequently,Fair,"","127.0.0.1","Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0",2025-11-09T06:45:32.900242Z
+2,"k","",Satisfied,Good,None,Satisfied,Easy,Occasionally,Good,"","127.0.0.1","Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0",2025-11-09T06:46:54.727369Z
+f,f@d.com,Satisfied,Fair,Neutral,Very easy,Frequently,Fair,f
+f,f@d.com,Satisfied,Fair,Neutral,Very easy,Frequently,Fair,f
+f,f@d.com,Satisfied,Fair,Neutral,Very easy,Frequently,Fair,f

@@ -2,27 +2,40 @@ import os
 import sqlite3
 from datetime import datetime
 from pathlib import Path
-from flask import Flask, request, render_template, redirect, url_for, flash, abort, jsonify
-from werkzeug.security import generate_password_hash
+from flask import Flask, request, render_template
+from werkzeug.utils import secure_filename
 
-# Configuration via environment variables (so it's easy to change on the Pi)
-DB_PATH = Path(os.environ.get("DB_PATH", "data.sqlite"))
-CSV_PATH = Path(os.environ.get("CSV_PATH", "submissions.csv"))
-ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "changeme")  # set a stronger token before deploying
-HOST = os.environ.get("FLASK_HOST", "127.0.0.1")
-PORT = int(os.environ.get("FLASK_PORT", 5000))
-
+# --------------------------
+# 1️⃣ Create Flask app
+# --------------------------
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")  # set to a random value in prod
+app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")  # for session/flash
 
-def ensure_db():
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
+# --------------------------
+# 2️⃣ Configuration for file uploads
+# --------------------------
+RESUME_UPLOAD_FOLDER = Path("uploads")
+RESUME_UPLOAD_FOLDER.mkdir(exist_ok=True)
+ALLOWED_RESUME_EXTENSIONS = {"pdf", "doc", "docx", "txt"}
+
+def allowed_resume(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_RESUME_EXTENSIONS
+
+# --------------------------
+# 3️⃣ Database helper functions
+# --------------------------
+def ensure_applicant_db():
+    conn = sqlite3.connect("job_applications.sqlite")
     conn.execute('''
-    CREATE TABLE IF NOT EXISTS submissions (
+    CREATE TABLE IF NOT EXISTS applicants (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        password_hash TEXT NOT NULL,
+        full_name TEXT,
+        email TEXT,
+        phone TEXT,
+        position TEXT,
+        experience TEXT,
+        skills TEXT,
+        resume_path TEXT,
         client_ip TEXT,
         user_agent TEXT,
         created_at TEXT NOT NULL
@@ -30,69 +43,103 @@ def ensure_db():
     ''')
     conn.commit()
     conn.close()
-    # ensure CSV exists with header
-    if not CSV_PATH.exists():
-        CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(CSV_PATH, "w", encoding="utf-8") as f:
-            f.write("id,username,password_hash,client_ip,user_agent,created_at\n")
 
-def insert_submission(username, password_hash, client_ip, user_agent):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
+    # CSV backup
+    csv_path = Path("job_applications.csv")
+    if not csv_path.exists():
+        with open(csv_path, "w", encoding="utf-8") as f:
+            f.write("id,full_name,email,phone,position,experience,skills,resume_path,client_ip,user_agent,created_at\n")
+
+def insert_applicant(data, client_ip, user_agent):
     created_at = datetime.utcnow().isoformat() + "Z"
-    cur.execute(
-        "INSERT INTO submissions (username, password_hash, client_ip, user_agent, created_at) VALUES (?, ?, ?, ?, ?)",
-        (username, password_hash, client_ip, user_agent, created_at)
-    )
+    conn = sqlite3.connect("job_applications.sqlite")
+    cur = conn.cursor()
+    cur.execute('''
+        INSERT INTO applicants (
+            full_name,email,phone,position,experience,skills,resume_path,client_ip,user_agent,created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (
+        data.get("full_name"), data.get("email"), data.get("phone"), data.get("position"),
+        data.get("experience"), data.get("skills"), data.get("resume_path"),
+        client_ip, user_agent, created_at
+    ))
     rowid = cur.lastrowid
     conn.commit()
     conn.close()
-    # Append to CSV (use append mode)
-    with open(CSV_PATH, "a", encoding="utf-8") as f:
-        # basic CSV escaping - usernames shouldn't contain commas in this demo
-        line = f'{rowid},{username},{password_hash},{client_ip},"{user_agent}",{created_at}\n'
+
+    # Append to CSV
+    with open("job_applications.csv", "a", encoding="utf-8") as f:
+        line = f'{rowid},"{data.get("full_name")}","{data.get("email")}","{data.get("phone")}","{data.get("position")}","{data.get("experience")}","{data.get("skills")}","{data.get("resume_path")}","{client_ip}","{user_agent}",{created_at}\n'
         f.write(line)
-    return rowid
 
-@app.route("/", methods=["GET"])
-def login_page():
-    return render_template("login.html")
+# --------------------------
+# 4️⃣ Routes
+# --------------------------
 
-@app.route("/login", methods=["POST"])
-def do_login():
-    username = (request.form.get("username") or "").strip()
-    password = (request.form.get("password") or "")
-    if not username or not password:
-        flash("Please enter both username and password", "error")
-        return redirect(url_for("login_page"))
+# Survey Page
+@app.route("/survey", methods=["GET"])
+def survey_form():
+    return render_template("survey.html")
 
-    # "Fake" authentication: we don't check password correctness.
-    # We WILL hash the submitted password before storing it (good practice).
-    password_hash = generate_password_hash(password)
+# Optional: handle survey submission
+@app.route("/submit-survey", methods=["POST"])
+def submit_survey():
+    # Collect survey form data
+    data = {key: (request.form.get(key) or "").strip() for key in request.form}
+
+    # You can store survey data in a CSV or database
+    csv_path = Path("survey_submissions.csv")
+    if not csv_path.exists():
+        with open(csv_path, "w", encoding="utf-8") as f:
+            # header: adjust based on your survey questions
+            f.write(",".join(data.keys()) + "\n")
+
+    with open(csv_path, "a", encoding="utf-8") as f:
+        # basic CSV write
+        f.write(",".join(data.values()) + "\n")
+
+    return render_template("survey_thankyou.html")
+    
+@app.route("/apply", methods=["GET"])
+def job_form():
+    # Show the job application form
+    return render_template("job_application.html")
+
+@app.route("/apply", methods=["POST"])
+def submit_application():
+    # Collect form data
+    data = {key: (request.form.get(key) or "").strip() for key in request.form}
+
+    # Handle file upload
+    uploaded_file = request.files.get("resume")
+    if uploaded_file and allowed_resume(uploaded_file.filename):
+        filename = secure_filename(uploaded_file.filename)
+        # prepend timestamp to avoid overwriting
+        filename = f"{int(datetime.utcnow().timestamp())}_{filename}"
+        filepath = RESUME_UPLOAD_FOLDER / filename
+        uploaded_file.save(filepath)
+        data["resume_path"] = str(filepath)
+    else:
+        data["resume_path"] = None
+
     client_ip = request.remote_addr or "unknown"
     user_agent = request.headers.get("User-Agent", "")
+    insert_applicant(data, client_ip, user_agent)
 
-    insert_submission(username, password_hash, client_ip, user_agent)
+    return render_template("job_thankyou.html")
 
-    # Redirect to a simple "dashboard" showing the (fake) user info
-    return render_template("admin.html", username=username, email=f"{username}@example.com")
-
-# simple admin API to list submissions (token-protected)
-@app.route("/admin/submissions", methods=["GET"])
-def admin_list():
-    token = request.args.get("token") or request.headers.get("X-Admin-Token")
-    if token != ADMIN_TOKEN:
-        return abort(403)
-
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    cur = conn.cursor()
-    cur.execute("SELECT id, username, password_hash, client_ip, user_agent, created_at FROM submissions ORDER BY id DESC LIMIT 1000")
-    rows = [dict(r) for r in cur.fetchall()]
-    conn.close()
-    return jsonify(rows)
-
+# --------------------------
+# 5️⃣ Main
+# --------------------------
 if __name__ == "__main__":
-    ensure_db()
-    print(f"Starting Flask app on {HOST}:{PORT}, DB at {DB_PATH}, CSV at {CSV_PATH}")
-    app.run(host=HOST, port=PORT, debug=True)
+    ensure_applicant_db()
+    # Listen on all interfaces for Pi usage
+    cert_file = Path("cert.pem")
+    key_file = Path("key.pem")
+    if cert_file.exists() and key_file.exists():
+        print(f"Starting HTTPS Flask server on 0.0.0.0:5000")
+        app.run(host="0.0.0.0", port=5000, debug=True, ssl_context=('cert.pem','key.pem'))
+    else:
+        print("Starting HTTP Flask server (cert.pem/key.pem not found)")
+        app.run(host="0.0.0.0", port=5000, debug=True)
+
