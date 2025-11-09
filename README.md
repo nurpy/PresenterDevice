@@ -36,3 +36,60 @@ WiFiLess is a versatile system that simplifies networking and information collec
 - Used to configure the Raspberry Pi as a WiFi access point.
 - Allowed the Pi to broadcast a hotspot that clients could connect to for accessing the captive portal.
 - Provided the necessary backend for networking the captive portal environment.
+
+---
+
+### Requirements
+- Raspberry Pi 3 / 4 / Zero 2 W (with built-in Wi-Fi)
+- Raspberry Pi OS (Bookworm or Bullseye) or Ubuntu 22.04+
+- Python 3.9+
+- `hostapd`, `dnsmasq`, `iptables` or `nftables`
+- Optional: Firefox (for kiosk mode)
+
+### Installation
+
+### 1 Clone This R-epository
+> git clone https://github.com/<your-username>/piportal.git <br>
+> cd PresenterDevice
+
+### 2 Install Packages and Edit Configuration Files
+> python3 -m venv .venv <br>
+> source .venv/bin/activate <br>
+> pip install -r requirements.txt <br>
+> sudo apt install hostapd dnsmasq <br>
+> sudo systemctl stop hostapd <br>
+> sudo systemctl stop dnsmasq
+
+Edit /etc/dhcpcd.conf:
+>interface wlan0 <br>
+>    static ip_address=192.168.4.1/24 <br>
+>    nohook wpa_supplicant
+
+
+Edit /etc/dnsmasq.conf:
+>interface=wlan0 <br>
+>dhcp-range=192.168.4.2,192.168.4.50,255.255.255.0,24h <br>
+>address=/#/192.168.4.1
+
+
+Edit Configure /etc/hostapd/hostapd.conf:
+>interface=wlan0 <br>
+>driver=nl80211 <br>
+>ssid=PiPortal <br>
+>hw_mode=g <br>
+>channel=7 <br>
+>auth_algs=1 <br>
+>ignore_broadcast_ssid=0 <br>
+> sudo systemctl unmask hostapd <br>
+> sudo systemctl enable hostapd dnsmasq <br>
+> sudo systemctl start hostapd dnsmasq
+
+### 3 Run 
+> Run with ./start.sh
+
+
+
+
+
+
+
